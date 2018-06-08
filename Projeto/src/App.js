@@ -22,7 +22,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { usuario: false }
+    this.state = JSON.parse(localStorage.getItem('usuario'))
 
     this.logaUsuario = this.logaUsuario.bind(this)
     this.deslogaUsuario = this.deslogaUsuario.bind(this)
@@ -33,7 +33,7 @@ class App extends React.Component {
   }
 
   deslogaUsuario() {
-    this.setState({ usuario: false })
+
   }
 
   render() {

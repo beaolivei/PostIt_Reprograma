@@ -1,7 +1,9 @@
 import React from 'react'
 import Postit from '../../componentes/Postit/Postit'
 import loading from './loading.gif'
+import *as apiPostit from '../../apis/postits'
 import './Home.css'
+import *as apiPostit from '../../apis/postits'
 
 /*
 1. Fazer o Loading aparecer caso a lista vazia
@@ -20,71 +22,29 @@ class Home extends React.Component {
 
     componentDidMount() {
         // TODO: buscar lista de postit
-        const postits = [
-            {
-                id: "c2f27308-75c6-440b-bbf9-1a075c32200f",
-                titulo: "Estuda HTML",
-                texto: "Lorem Ipsum"
-            },
-            {
-                id: "4627781c-bd04-41d5-8c97-3819d2a38fc1",
-                titulo: "Estuda CSS",
-                texto: "Lorem Ipsum"
-            },
-            {
-                id: "04b9dd92-71a6-46bc-9e63-df5112d3fa71",
-                titulo: "Estuda JS",
-                texto: "Lorem Ipsum"
-            }
-        ]
-        
-        setTimeout(() => {
-            this.setState({
-                postits: postits,
-                carregando: false
-            })
-        }, 3000)
-    }
+        //chamar a função que dispara a função
+
 
     adicionaPostit = (novoPostit) => {
         // this.state.postits.concat(postit)
-        this.setState(prevState => {
-            novoPostit.id = this.state.postits + 1
-            console.log (novoPostit.id)
-             return {
-                postits: this.state.postits.concat(novoPostit)
-            }
-        })
+
     }
-
-    removePostit = (id) => {
-console.log ('id', id)
-
-        this.setState(prevState => {
-            return {
-                postits: prevState.postits.filter(
-                    postit => postit.id !== id
-                )
-            }
-        })
-    }
-
     editaPostits = (postitAlterado) => {
-        this.setState(prevState => {
-            function mudaPostit(itemDoArray) {
-                if (itemDoArray.id === postitAlterado.id) {
-                    return postitAlterado
-                        
-                } else {
-                    return itemDoArray
-                }
-            }
+//depois chamara a ação de edita postit 
 
-            return {
-                postits: prevState.postits.map(mudaPostit)
-            }
-        })
-    }
+    removePostit = (idPostitRemovido) => {
+        apiPostit.deletePostit (idPostitRemovido)
+            .then (response => {
+                this.setState (prevState => {
+                    return {
+                        postits: prevState.postits.filter (
+                            postit => postit.id !== idPostitRemovido
+                        )
+                    }
+                })
+            })
+        }
+
 
     render() {
         return (
