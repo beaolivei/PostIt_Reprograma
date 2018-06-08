@@ -14,7 +14,8 @@ import './Home.css'
 
 class Home extends React.Component {
     state = {
-        postits: []
+        postits: [],
+        carregando: true
     }
 
     componentDidMount() {
@@ -37,23 +38,28 @@ class Home extends React.Component {
             }
         ]
         
-        setInterval(() => {
+        setTimeout(() => {
             this.setState({
-                postits: postits
+                postits: postits,
+                carregando: false
             })
         }, 3000)
     }
 
-    adicionaPostit(postit) {
+    adicionaPostit = (novoPostit) => {
         // this.state.postits.concat(postit)
         this.setState(prevState => {
-            return {
-                postits: this.state.postits.concat(postit)
+            novoPostit.id = this.state.postits + 1
+            console.log (novoPostit.id)
+             return {
+                postits: this.state.postits.concat(novoPostit)
             }
         })
     }
 
-    removePostit(id) {
+    removePostit = (id) => {
+console.log ('id', id)
+
         this.setState(prevState => {
             return {
                 postits: prevState.postits.filter(
@@ -63,22 +69,19 @@ class Home extends React.Component {
         })
     }
 
-    editaPostits(postitAlterado) {
+    editaPostits = (postitAlterado) => {
         this.setState(prevState => {
             function mudaPostit(itemDoArray) {
                 if (itemDoArray.id === postitAlterado.id) {
-                    return {
-                        id: postitAlterado.id,
-                        titulo: postitAlterado.titulo,
-                        texto: postitAlterado.texto
-                    }
+                    return postitAlterado
+                        
                 } else {
                     return itemDoArray
                 }
             }
 
             return {
-                postits: arrayNovo
+                postits: prevState.postits.map(mudaPostit)
             }
         })
     }
@@ -86,11 +89,15 @@ class Home extends React.Component {
     render() {
         return (
             <div className="home">
-                <Postit />
+                <Postit 
+                    onAdicionaPostitClick = {this.adicionaPostit}
+                    onEditaPostitClick={this.editaPostits}
+                    onRemoverPostitClick={this.removePostit}
+                    />
     
                 <div className="home__lista">
                 {
-                    this.state.postits.length === 0 ? (
+                    this.state.carregando ? (
                         <img src={loading} alt="Carregando lista de postit" />
                     ) : (
                         this.state.postits.map(postit => (
@@ -99,9 +106,13 @@ class Home extends React.Component {
                                 id={postit.id}
                                 titulo={postit.titulo}
                                 texto={postit.texto}
+                                onAdicionaPostitClick ={this.adicionaPostit}
+                                onEditaPostitClick={this.editaPostits}
+                                onRemoverPostitClick={this.removePostit}
                             />
                         ))
                     )
+                }
                 }
                 </div>
             </div>
